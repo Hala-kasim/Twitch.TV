@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Twitch-TV</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="containar">
+  <div class="sub-container">
+  <section>
+  <div class="online"><div class="one"></div>ONLINE</div>
+  <div class="offline"><div class="two"></div>OFFLINE</div>
+  </section>
+  <h1>TWITCH STREAMERS</h1>
+  </div>
+  <div class="user"></div>
+  <div class="status"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/g/jquery@2.2.4,bootstrap@3.3.6,mark.js@8.6.0(jquery.mark.min.js)"></script>
+<script>
+
+$(document).ready(function(){
+  var streamers = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+ 
+    for(i = 0; i < streamers.length; i++) {
+  $.ajax({
+    type: "Get",
+    url: "https://api.twitch.tv/kraken/channels/" + streamers[i],
+  headers:{
+    "client-ID": "rp0e2c4y3nqc392dgwehvbhg0cs5r8c"
+  },
+  success: function(data) {
+  //  console.log(data1);
+    $.getJSON("https://api.twitch.tv/kraken/streams/" + data.name + "?client_id=rp0e2c4y3nqc392dgwehvbhg0cs5r8c").done(function(data1){
+    // console.log(data1);
+      var name = data1._links.self.slice(37);
+    // console.log(name);    
+ 
+      if(data1.stream === null) {
+        $(".user").append('<a href="https://www.twitch.tv/' +  name  +'"   target="_blank">' + name + '</a>Null</br>');
+        $(".status").append("OFFLINE </br>");
+    
+     
+      } else {
+         $(".user").append('<a href="https://www.twitch.tv/' +  name  +'"   target="_blank">' + name + '</a><b>Access</b></br>');
+        $(".status").append("<span style='color:pink'>ONLINE</span> </br>");
+      }
+    });
+  },
+    error: function(err) {
+       //console.log("there is an error");
+     $(".user").append('Invalid User</br>');
+      $(".status").append("Not Found</br>");
+        }
+    
+  });    
+    }
+});
+
+</script>
+</body>
+
+</html>
